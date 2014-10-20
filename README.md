@@ -1,4 +1,4 @@
 stretching-with-kinect
 ======================
 
-A little exercise with Kinect
+A little stretching exercise with Kinect
