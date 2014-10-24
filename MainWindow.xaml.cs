@@ -7,6 +7,7 @@
 namespace Microsoft.Samples.Kinect.SkeletonBasics
 {
     using System.IO;
+    using System;
     using System.Windows;
     using System.Windows.Media;
     using Microsoft.Kinect;
@@ -49,7 +50,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// <summary>
         /// Brush used for drawing joints that are currently tracked
         /// </summary>
-        private readonly Brush trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
+        private readonly Brush trackedJointBrush = Brushes.Red;
 
         /// <summary>
         /// Brush used for drawing joints that are currently inferred
@@ -59,7 +60,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// <summary>
         /// Pen used for drawing bones that are currently tracked
         /// </summary>
-        private readonly Pen trackedBonePen = new Pen(Brushes.Green, 6);
+        private readonly Pen trackedBonePen = new Pen(Brushes.Red, 6);
 
         /// <summary>
         /// Pen used for drawing bones that are currently inferred
@@ -283,9 +284,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             this.DrawBone(skeleton, drawingContext, JointType.AnkleRight, JointType.FootRight);
  
             // Render Joints
+
             foreach (Joint joint in skeleton.Joints)
             {
                 Brush drawBrush = null;
+
 
                 if (joint.TrackingState == JointTrackingState.Tracked)
                 {
@@ -296,11 +299,56 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     drawBrush = this.inferredJointBrush;                    
                 }
 
+                // If it's in position 37, change brush to green
+                if (isPosition37(175, skeleton))
+                {
+                    drawBrush = Brushes.Green;
+                }
+
                 if (drawBrush != null)
                 {
                     drawingContext.DrawEllipse(drawBrush, null, this.SkeletonPointToScreen(joint.Position), JointThickness, JointThickness);
                 }
             }
+        }
+
+        /// <summary>
+        /// Check if skeleton is in position 37
+        /// </summary>
+        /// <param name="distance">distance between the hip and shoulder</param>
+        /// <param name="skeleton">skeleton to obtain the info from</param>
+        /// <returns>true when the position is archived</returns>
+        private bool isPosition37(int distance, Skeleton skeleton)
+        {
+            int ShoulderCenter = SkeletonPointDepth(skeleton.Joints[JointType.ShoulderCenter].Position);
+            int ShoulderRight = SkeletonPointDepth(skeleton.Joints[JointType.ShoulderRight].Position);
+            int ShoulderLeft = SkeletonPointDepth(skeleton.Joints[JointType.ShoulderLeft].Position);
+            int HipCenter = SkeletonPointDepth(skeleton.Joints[JointType.HipCenter].Position);
+
+            // Is shoulder behind the hip?
+            bool ShoulderCenterBehindHip = ShoulderCenter > (distance + HipCenter);
+
+            // Are Shoulders Aligned? - We don't need if aligned with hips
+            bool ShouldersAligned = Math.Abs(ShoulderRight - ShoulderLeft) < 100;
+            
+            // If all is true, we are in position 37
+            if (ShoulderCenterBehindHip && ShouldersAligned)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Get the depth from a skeleton point
+        /// </summary>
+        /// <param name="skelpoint">point to get depth</param>
+        /// <returns>depth of the point</returns>
+        private int SkeletonPointDepth(SkeletonPoint skelpoint)
+        {
+            DepthImagePoint depthPoint = this.sensor.CoordinateMapper.MapSkeletonPointToDepthPoint(skelpoint, DepthImageFormat.Resolution640x480Fps30);
+            return depthPoint.Depth;
         }
 
         /// <summary>
@@ -347,6 +395,12 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             if (joint0.TrackingState == JointTrackingState.Tracked && joint1.TrackingState == JointTrackingState.Tracked)
             {
                 drawPen = this.trackedBonePen;
+
+                // If it's in position 37, change pen to green
+                if (isPosition37(175,skeleton))
+                {
+                    drawPen = new Pen(Brushes.Green, 6);
+                }
             }
 
             drawingContext.DrawLine(drawPen, this.SkeletonPointToScreen(joint0.Position), this.SkeletonPointToScreen(joint1.Position));
