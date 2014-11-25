@@ -1,7 +1,7 @@
-Stretching with kinect
+Kung Fu with kinect
 ======================
 
-A little stretching exercise with Kinect.
+Practise a little of Kunf Fu with Kinect.
 
 Compilation
 -----------
@@ -11,20 +11,14 @@ Load the project in Visual Studio and compile it.
 Use
 ---------
 
-Once you are in the standing position, tilt your body backwards until Skeleton turns green. Your shoulder must be aligned between them and try to keep your hips still.
+Click on the button of the pose you want to archieve and try to match the pose. Once the skeleton is green, hold on 5 seconds.
 
 How it works
 -------------
 
-The program gets the depth of the hip and shoulder and checks that the shoulders are away from the hip a distance given by the user. 
-
-To ensure that the user does not perform a bad movement, the function also checks that the shoulders are aligned, leaving a margin in the alignment given by the user.
-
-If the condition it's accomplished, the brush to paint, bones and points it's changed from red to green to provide the user a feedback.
+The program gets the x,y position of a given skeleton (maybe your Kung Fu trainer) and saves it to the disk. To get the error, we simply obtain the difference between the user tracked points and the saved skeleton.
 
 How can you use it
 -------------------
 
-As the functionality of the program is based on a boolean function wich return true if the user is in position, you may copy the funcion `isPosition37(int distance, Skeleton skeleton)` and `SkeletonPointDepth(SkeletonPoint skelpoint)` to obtain the skeleton points depth.
-
-Use the funciont wherever you want, for example, within an `if` statement to change colors when painting the Skeleton.
+Get a Kunf Fu Master or just someone who tells you if any position you want to practise is correctly done and push the save button. You can rename it and use it again later, change the holding time, and the difficulty inside the program.

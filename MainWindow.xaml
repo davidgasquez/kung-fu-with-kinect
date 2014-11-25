@@ -1,8 +1,11 @@
 ﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:k="http://schemas.microsoft.com/kinect/2013"
+        
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="Microsoft.Samples.Kinect.SkeletonBasics.MainWindow"
-        Title="Kinect" Loaded="WindowLoaded" Closing="WindowClosing" HorizontalAlignment="Center" VerticalAlignment="Center" d:DesignWidth="705" d:DesignHeight="523" >
+        
+        Title="Kung Fu with Kinect" Height="646" Width="1100" Loaded="WindowLoaded" Closing="WindowClosing" Background="#FF96C8FF">
 
     <Window.Resources>
         <SolidColorBrush x:Key="MediumGreyBrush" Color="#ff6e6e6e"/>
@@ -11,64 +14,23 @@
         <Style TargetType="{x:Type Image}">
             <Setter Property="SnapsToDevicePixels" Value="True"/>
         </Style>
-        <Style TargetType="{x:Type CheckBox}" x:Key="SquareCheckBox" >
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type CheckBox}">
-                        <Grid>
-                            <StackPanel Orientation="Horizontal" Background="Transparent">
-                                <Grid x:Name="SquareCheckBoxChecked">
-                                    <Image x:Name="CheckedNormal" Source="Images\CheckedNormal.png" Stretch="None" HorizontalAlignment="Center"/>
-                                    <Image x:Name="CheckedHover" Source="Images\CheckedHover.png" Stretch="None" HorizontalAlignment="Center" Visibility="Collapsed"/>
-                                </Grid>
-                                <Grid x:Name="SquareCheckBoxUnchecked" Visibility="Collapsed">
-                                    <Image x:Name="UncheckedNormal" Source="Images\UncheckedNormal.png" Stretch="None" HorizontalAlignment="Center"/>
-                                    <Image x:Name="UncheckedHover" Source="Images\UncheckedHover.png" Stretch="None" HorizontalAlignment="Center" Visibility="Collapsed"/>
-                                </Grid>
-                                <TextBlock x:Name="SquareCheckBoxText" Text="{TemplateBinding Content}" TextAlignment="Left"  VerticalAlignment="Center" Foreground="{StaticResource KinectPurpleBrush}" FontSize="15"  Margin="9,0,0,0"/>
-                            </StackPanel>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="false">
-                                <Setter Property="Visibility" Value="Collapsed" TargetName="SquareCheckBoxChecked"/>
-                                <Setter Property="Visibility" Value="Visible" TargetName="SquareCheckBoxUnchecked"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="Visibility" Value="Collapsed" TargetName="CheckedNormal"/>
-                                <Setter Property="Visibility" Value="Collapsed" TargetName="UncheckedNormal"/>
-                                <Setter Property="Visibility" Value="Visible" TargetName="CheckedHover"/>
-                                <Setter Property="Visibility" Value="Visible" TargetName="UncheckedHover"/>
-                                <Setter Property="Foreground" Value="{StaticResource KinectBlueBrush}" TargetName="SquareCheckBoxText"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </Window.Resources>
 
-    <Grid x:Name="layoutGrid" Margin="10 0 10 0" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0" Margin="10,10,10,40" VerticalAlignment="Top">
-            <TextBlock  FontFamily="Microsoft NeoGothic" FontSize="24" TextAlignment="Center" FontStretch="SemiExpanded" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"><Run Foreground="#FF58AA29" Text="Let's Play!"/></TextBlock>
-        </DockPanel>
-
-        <Grid Grid.Row="1" Name="VideoGrid" ClipToBounds="True"  HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Image Name="ColorImage" Width="640" Height="480" HorizontalAlignment="Right"  VerticalAlignment="Top"/>
-            <Image Name="SkeletonImage" Width="640" Height="480" HorizontalAlignment="Right"  VerticalAlignment="Top"/>
-            <Canvas Background="Transparent"/>
-        </Grid>
-
-        <CheckBox Grid.Row="2" Style="{StaticResource SquareCheckBox}" Content="Seated Mode" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0 10 10 10" x:Name="checkBoxSeatedMode" Checked="CheckBoxSeatedModeChanged" Unchecked="CheckBoxSeatedModeChanged"/>
-        <StatusBar Grid.Row="3" HorizontalAlignment="Stretch" x:Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}" Visibility="Hidden">
-            <StatusBarItem Padding="0 0 0 10" VerticalAlignment="Center" Background="{x:Null}" Visibility="Hidden">
-                <TextBlock x:Name="statusBarText" Margin="-1 0 0 0"><Run Text="Click 'Seated' to change skeletal pipeline type!"/></TextBlock>
-            </StatusBarItem>
-        </StatusBar>
+    <Grid x:Name="layoutGrid" Margin="10,0,2,0" Height="510">
+        <Image Grid.Row="0" Grid.Column="0" x:Name="Image" Width="640" Height="480" Margin="11,10,329,20"/>
+        <Button Content="Save" Height="22" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="button" Width="105" Click="button_Click" Margin="145,515,725,-27" Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" Background="{DynamicResource KinectBlueBrush}" BorderThickness="0" FontFamily="Georgia" FontWeight="Bold"/>
+        <Button Content="Serious Mode" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="SeriousModeButton" Width="105" Click="SeriousMode" Margin="440,515,440,-25" Background="#FFFFC800" BorderThickness="0" FontFamily="Georgia" FontWeight="Bold">
+            <Button.Effect>
+                <DropShadowEffect BlurRadius="40" Direction="0" ShadowDepth="0" Color="#FFFFC800"/>
+            </Button.Effect>
+        </Button>
+        <Image Height="100" Width="350" VerticalAlignment="Top" x:Name="infoImage" Margin="292,24,338,0"/>
+        <Button Content="Eagle" HorizontalAlignment="Stretch" Height="44" Margin="667,10,0,0" VerticalAlignment="Top" Width="300" Click="setEagle" FontFamily="Georgia" FontWeight="Bold" Background="{DynamicResource KinectBlueBrush}" Foreground="{DynamicResource {x:Static SystemColors.InfoTextBrushKey}}" BorderThickness="0"/>
+        <Button Content="Dragon Ball" HorizontalAlignment="Stretch" Height="44" Margin="667,80,0,0" VerticalAlignment="Top" Width="300"  Click="setDragon" FontFamily="Georgia" FontWeight="Bold" Background="{DynamicResource KinectBlueBrush}" Foreground="{DynamicResource {x:Static SystemColors.InfoTextBrushKey}}" BorderThickness="0"/>
+        <Button Content="Karate Kid - 1" HorizontalAlignment="Stretch" Height="44" Margin="667,154,0,0" VerticalAlignment="Top" Width="300"  Click="setKR" FontFamily="Georgia" FontWeight="Bold" Background="{DynamicResource KinectBlueBrush}" Foreground="{DynamicResource {x:Static SystemColors.InfoTextBrushKey}}" BorderThickness="0"/>
+        <Button Content="Karate Kid - 2" HorizontalAlignment="Stretch" Height="44" Margin="667,229,0,0" VerticalAlignment="Top" Width="300"  Click="setKL" FontFamily="Georgia" FontWeight="Bold" Background="{DynamicResource KinectBlueBrush}" Foreground="{DynamicResource {x:Static SystemColors.InfoTextBrushKey}}" BorderThickness="0"/>
+        <Button Content="Arrow" HorizontalAlignment="Stretch" Height="44" Margin="667,302,0,0" VerticalAlignment="Top" Width="300"  Click="setArrow" FontFamily="Georgia" FontWeight="Bold" Background="{DynamicResource KinectBlueBrush}" Foreground="{DynamicResource {x:Static SystemColors.InfoTextBrushKey}}" BorderThickness="0"/>
+        <Button Content="Fight" HorizontalAlignment="Stretch" Height="44" Margin="667,374,0,0" VerticalAlignment="Top" Width="300"  Click="setFight" FontFamily="Georgia" FontWeight="Bold" Background="{DynamicResource KinectBlueBrush}" Foreground="{DynamicResource {x:Static SystemColors.InfoTextBrushKey}}" BorderThickness="0"/>
+        <Button Content="Clean" HorizontalAlignment="Stretch" Height="44" Margin="667,446,0,0" VerticalAlignment="Top" Width="300"  Click="setNone" FontFamily="Georgia" FontWeight="Bold" Background="{DynamicResource KinectPurpleBrush}" Foreground="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}" BorderThickness="0"/>
     </Grid>
 </Window>
