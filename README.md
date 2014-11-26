@@ -7,6 +7,7 @@ Compilation
 -----------
 
 Load the project in Visual Studio and compile it.
+Place the images "done.png" and "hold.png" in C::\ (I'll try to fix it)
 
 Use
 ---------
