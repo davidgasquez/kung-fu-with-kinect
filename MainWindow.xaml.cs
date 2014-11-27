@@ -118,7 +118,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics {
         /// <summary>
         /// Picture info status
         /// </summary>
-        private int pictureInfoStatus = 0;
+        private int feedbackStatus = 0;
 
         /// <summary>
         /// Time variables to measure elapsed time in a pose
@@ -340,16 +340,16 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics {
                                 } else if (staticSkeleton != null && error < difficulty && inPose) {
                                     endTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
                                     if (endTime - startTime > holdPoseTime) {
-                                        pictureInfoStatus = 2;
+                                        feedbackStatus = 2;
                                         infoImage.Source = new BitmapImage(new System.Uri(@"C:\\done.png", UriKind.RelativeOrAbsolute));
                                     } else {
-                                        pictureInfoStatus = 1;
+                                        feedbackStatus = 1;
                                         infoImage.Source = new BitmapImage(new System.Uri(@"C:\\hold.png", UriKind.RelativeOrAbsolute));
                                         Console.WriteLine(error);
                                     }
                                 } else {
                                     inPose = false;
-                                    if (pictureInfoStatus != 2)
+                                    if (feedbackStatus != 2)
                                         infoImage.Source = null;
                                 }
                             }
@@ -457,12 +457,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics {
 
                         BitmapImage bi = new BitmapImage();
                         bi.BeginInit();
-                        if (this.SkeletonPointToScreen(joint.Position).X - 50 > RenderWidth / 2) {
-                            bi.UriSource = new System.Uri(@"../../Images/bl.png", UriKind.RelativeOrAbsolute);
-                        } else {
-                            bi.UriSource = new System.Uri(@"../../Images/bl2.png", UriKind.RelativeOrAbsolute);
-                        }
+                        bi.UriSource = new System.Uri(@"../../Images/bl.png", UriKind.RelativeOrAbsolute);
                         bi.EndInit();
+                        // Shift a little
                         drawingContext.DrawImage(bi, new Rect(this.SkeletonPointToScreen(joint.Position).X - 50, this.SkeletonPointToScreen(joint.Position).Y - 53, 100, 106), null);
 
                     }
